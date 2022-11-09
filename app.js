@@ -5,6 +5,8 @@ const rateLimit = require("express-rate-limit");
 const hpp = require("hpp");
 const xss = require("xss-clean");
 const mongoSanitize = require("express-mongo-sanitize");
+const fileUpload = require("express-fileupload");
+
 const AppError = require("./utils/AppError");
 const ErrorHandler = require("./utils/ErrorHandler");
 const authRoutes = require("./routes/authRoutes");
@@ -41,6 +43,7 @@ app.use(express.json());
 
 app.use(cookieParser());
 
+app.use(express.static("./public"));
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/products", productRoutes);
