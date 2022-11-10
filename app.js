@@ -5,13 +5,13 @@ const rateLimit = require("express-rate-limit");
 const hpp = require("hpp");
 const xss = require("xss-clean");
 const mongoSanitize = require("express-mongo-sanitize");
-const fileUpload = require("express-fileupload");
 
 const AppError = require("./utils/AppError");
 const ErrorHandler = require("./utils/ErrorHandler");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 
 const app = express();
 
@@ -47,6 +47,7 @@ app.use(express.static("./public"));
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/products", productRoutes);
+app.use("/api/v1/reviews", reviewRoutes);
 
 app.all("*", (req, res, next) => {
   return next(new AppError("There is no such page", 404));

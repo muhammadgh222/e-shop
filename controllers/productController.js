@@ -4,6 +4,7 @@ const AppError = require("../utils/AppError");
 const APIFeatures = require("../utils/APIFeatures");
 
 const multer = require("multer");
+const Review = require("../models/reviewModel");
 
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -28,6 +29,7 @@ const upload = multer({
   fileFilter: multerFilter,
 });
 const imgUpload = upload.single("image");
+
 const getTopProducts = AsyncHandler(async (req, res, next) => {
   req.query.limit = "1";
   req.query.sort = "-ratingsAverage";
@@ -57,7 +59,10 @@ const getAllProducts = AsyncHandler(async (req, res) => {
 });
 
 const getProduct = AsyncHandler(async (req, res, next) => {
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findById(req.params.id).populate({
+    path: "reviews",
+    select: "user review rating",
+  });
 
   if (!product) {
     return next(new AppError("There is no such product", 404));
@@ -99,6 +104,13 @@ const deleteProduct = AsyncHandler(async (req, res, next) => {
     status: "success",
   });
 });
+const getProductReviews = AsyncHandler(async (req, res, next) => {
+  const reviews = await Review.find({ product: req.params.id });
+  res.status(200).json({
+    status: "success",
+    reviews,
+  });
+});
 
 module.exports = {
   createProduct,
@@ -108,4 +120,5 @@ module.exports = {
   deleteProduct,
   getTopProducts,
   imgUpload,
+  getProductReviews,
 };
