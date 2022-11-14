@@ -193,7 +193,7 @@ const bla = (req, res, next) => {
   });
 };
 
-exports.restrictTo = (...roles) => {
+const restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return next(
@@ -213,4 +213,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   updatePassword,
+  restrictTo,
 };
